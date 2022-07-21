@@ -79,11 +79,7 @@ class ServiceMaker(object):
             client_service = internet.TCPServer(
                 int(config.system['PORT']), factory)
 
-        if config.system['ENCRYPTION']:
-            gui_service = internet.SSLServer(
-                int(config.system['GUI_PORT']), guiplex.GUIFactory(), ServerContextFactory())
-        else:
-            gui_service = internet.TCPServer(
+        gui_service = internet.TCPServer(
                 int(config.system['GUI_PORT']), guiplex.GUIFactory())
 
         top_service = service.MultiService()
