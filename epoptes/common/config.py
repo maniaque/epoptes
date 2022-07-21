@@ -174,6 +174,8 @@ system.setdefault('PORT', 789)
 system.setdefault('SOCKET_GROUP', 'epoptes')
 system.setdefault('DIR', '/run/epoptes')
 system.setdefault('THUMBSHOT_MS', 5000)
+system.setdefault('GUI_SERVER', '127.0.0.1')
+system.setdefault('GUI_PORT', 790)
 # Allow running unencrypted, for clients with very low RAM.
 try:
     if os.path.getsize('/etc/epoptes/server.crt') == 0:

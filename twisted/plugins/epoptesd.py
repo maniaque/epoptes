@@ -79,17 +79,12 @@ class ServiceMaker(object):
             client_service = internet.TCPServer(
                 int(config.system['PORT']), factory)
 
-        gid = grp.getgrnam(config.system['SOCKET_GROUP'])[2]
-
-        if not os.path.isdir(config.system['DIR']):
-            # TODO: for some reason this does 0750 instead
-            os.makedirs(config.system['DIR'], 0o2770)
-        os.chmod(config.system['DIR'], 0o2770)
-        os.chown(config.system['DIR'], -1, gid)
-
-        gui_service = internet.UNIXServer(
-            "%s/epoptes.socket" % config.system['DIR'],
-            guiplex.GUIFactory())
+        if config.system['ENCRYPTION']:
+            client_service = internet.SSLServer(
+                int(config.system['GUI_PORT']), guiplex.GUIFactory(), ServerContextFactory())
+        else:
+            client_service = internet.TCPServer(
+                int(config.system['GUI_PORT']), guiplex.GUIFactory())
 
         top_service = service.MultiService()
         top_service.addService(client_service)

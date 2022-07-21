@@ -12,6 +12,7 @@ import random
 import socket
 import string
 import subprocess
+import netifaces
 
 from epoptes.ui.reactor import reactor
 from epoptes.common.constants import *
@@ -38,6 +39,8 @@ class EpoptesGui(object):
         self.about = None
         self.benchmark = None
         self.client_information = None
+        self.gateway_interface = netifaces.gateways()['default'][netifaces.AF_INET][1]
+        self.ip_default = netifaces.ifaddresses(self.gateway_interface)[netifaces.AF_INET][0]['addr']
         self.current_macs = subprocess.Popen(
             ['sh', '-c',
              r"""ip -oneline -family inet link show | """
@@ -296,7 +299,7 @@ class EpoptesGui(object):
             self.vncviewer = subprocess.Popen(scmd)
 
         # And, tell the clients to connect to the server
-        self.exec_on_selected_clients([cmd, self.vncviewer_port] + list(args))
+        self.exec_on_selected_clients([cmd, self.vncviewer_port, self.ip_default] + list(args))
 
     def on_imi_broadcasts_monitor_user_activate(self, _widget):
         """Handle imi_sbroadcasts_monitor_user.activate event."""
